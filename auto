@@ -1,0 +1,94 @@
+--// SPEED ghosts - Clean Grok UI + Title
+
+local player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+
+local maxSpeed = 325
+local enabled = false
+
+-- GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SpeedGhostsGui"
+screenGui.ResetOnSpawn = false
+screenGui.DisplayOrder = 9999
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 180, 0, 90)  -- a bit taller for title
+mainFrame.Position = UDim2.new(0, 30, 0, 100)
+mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 18)
+corner.Parent = mainFrame
+
+local shadow = Instance.new("ImageLabel")
+shadow.Size = UDim2.new(1, 10, 1, 10)
+shadow.Position = UDim2.new(0, -5, 0, -5)
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://6014261993"
+shadow.ImageTransparency = 0.7
+shadow.ImageColor3 = Color3.new(0,0,0)
+shadow.ZIndex = 9
+shadow.Parent = mainFrame
+
+-- Title at the top
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 26)
+title.Position = UDim2.new(0, 0, 0, 6)
+title.BackgroundTransparency = 1
+title.Text = "Auto Macro by Jayden"
+title.TextColor3 = Color3.fromRGB(100, 180, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.ZIndex = 12
+title.Parent = mainFrame
+
+-- Toggle button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(1, -24, 0, 36)
+button.Position = UDim2.new(0, 12, 0, 38)
+button.BackgroundTransparency = 1
+button.Text = "Disabled"
+button.TextColor3 = Color3.fromRGB(255, 90, 90)
+button.Font = Enum.Font.GothamBold
+button.TextSize = 30
+button.TextStrokeTransparency = 0.8
+button.ZIndex = 12
+button.Parent = mainFrame
+
+-- Update function
+local function update()
+    if enabled then
+        button.Text = "Enabled"
+        button.TextColor3 = Color3.fromRGB(60, 180, 255)
+        mainFrame.BackgroundColor3 = Color3.fromRGB(20, 30, 45)
+    else
+        button.Text = "Disabled"
+        button.TextColor3 = Color3.fromRGB(255, 90, 90)
+        mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+    end
+end
+
+button.MouseButton1Click:Connect(function()
+    enabled = not enabled
+    update()
+    if not enabled and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 16
+    end
+end)
+
+-- Speed loop
+RunService.RenderStepped:Connect(function()
+    if enabled and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = maxSpeed
+    end
+end)
+
+update()
+print("Auto Macro by Jayden - Loaded")
